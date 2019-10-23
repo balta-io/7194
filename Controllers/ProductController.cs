@@ -41,7 +41,7 @@ namespace Backoffice.Controllers
 
         [HttpPost]
         [Route("")]
-        [Authorize("employee")]
+        [Authorize(Roles = "employee")]
         public async Task<ActionResult<Product>> Post(
             [FromServices] DataContext context,
             [FromBody]Product model)

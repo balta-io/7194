@@ -16,7 +16,7 @@ namespace Backoffice.Controllers
     {
         [HttpGet]
         [Route("")]
-        [Authorize("manager")]
+        [Authorize(Roles = "manager")]
         public async Task<ActionResult<List<User>>> Get([FromServices] DataContext context)
         {
             var users = await context
@@ -28,7 +28,8 @@ namespace Backoffice.Controllers
 
         [HttpPost]
         [Route("")]
-        [Authorize("manager")]
+        [AllowAnonymous]
+        // [Authorize(Roles = "manager")]
         public async Task<ActionResult<User>> Post(
             [FromServices] DataContext context,
             [FromBody]User model)
@@ -52,7 +53,7 @@ namespace Backoffice.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
-        [Authorize("manager")]
+        [Authorize(Roles = "manager")]
         public async Task<ActionResult<User>> Put(
             [FromServices] DataContext context,
             int id,

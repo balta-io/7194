@@ -1,10 +1,8 @@
 using System.Text;
 using Backoffice.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,17 +22,8 @@ namespace Backoffice
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("Database"));
-            services.AddScoped<DataContext, DataContext>();
-
             services.AddCors();
-            services.AddMvc(config =>
-            {
-                var policy = new AuthorizationPolicyBuilder()
-                                .RequireAuthenticatedUser()
-                                .Build();
-                config.Filters.Add(new AuthorizeFilter(policy));
-            });
+            services.AddControllers();
 
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
             services.AddAuthentication(x =>
@@ -55,11 +44,8 @@ namespace Backoffice
                 };
             });
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("employee", policy => policy.RequireClaim("role", "employee"));
-                options.AddPolicy("manager", policy => policy.RequireClaim("role", "manager"));
-            });
+            services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("Database"));
+            services.AddScoped<DataContext, DataContext>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -67,13 +53,14 @@ namespace Backoffice
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
+            app.UseRouting();
+
+            // global cors policy
             app.UseCors(x => x
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
-            app.UseHttpsRedirection();
-            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
 

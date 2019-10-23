@@ -32,7 +32,7 @@ namespace Backoffice.Controllers
 
         [HttpPost]
         [Route("")]
-        [Authorize("employee")]
+        [Authorize(Roles = "employee")]
         public async Task<ActionResult<Category>> Post(
             [FromServices] DataContext context,
             [FromBody]Category model)
@@ -56,7 +56,7 @@ namespace Backoffice.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
-        [Authorize("employee")]
+        [Authorize(Roles = "employee")]
         public async Task<ActionResult<Category>> Put(
             [FromServices] DataContext context,
             int id,
@@ -85,7 +85,7 @@ namespace Backoffice.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
-        [Authorize("employee")]
+        [Authorize(Roles = "employee")]
         public async Task<ActionResult<Category>> Delete(
             [FromServices] DataContext context,
             int id)

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Backoffice.Enums;
 
 namespace Backoffice.Models
 {
