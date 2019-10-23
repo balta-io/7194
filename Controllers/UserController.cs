@@ -16,16 +16,19 @@ namespace Backoffice.Controllers
     {
         [HttpGet]
         [Route("")]
-        [AllowAnonymous]
+        [Authorize("manager")]
         public async Task<ActionResult<List<User>>> Get([FromServices] DataContext context)
         {
-            var users = await context.Users.AsNoTracking().ToListAsync();
+            var users = await context
+                .Users
+                .AsNoTracking()
+                .ToListAsync();
             return users;
         }
 
         [HttpPost]
         [Route("")]
-        [AllowAnonymous]
+        [Authorize("manager")]
         public async Task<ActionResult<User>> Post(
             [FromServices] DataContext context,
             [FromBody]User model)
@@ -37,6 +40,35 @@ namespace Backoffice.Controllers
             try
             {
                 context.Users.Add(model);
+                await context.SaveChangesAsync();
+                return model;
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { message = "Não foi possível criar o usuário" });
+
+            }
+        }
+
+        [HttpPut]
+        [Route("{id:int}")]
+        [Authorize("manager")]
+        public async Task<ActionResult<User>> Put(
+            [FromServices] DataContext context,
+            int id,
+            [FromBody]User model)
+        {
+            // Verifica se os dados são válidos
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // Verifica se o ID informado é o mesmo do modelo
+            if (id != model.Id)
+                return NotFound(new { message = "Usuário não encontrada" });
+
+            try
+            {
+                context.Entry(model).State = EntityState.Modified;
                 await context.SaveChangesAsync();
                 return model;
             }

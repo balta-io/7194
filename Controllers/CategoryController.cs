@@ -23,6 +23,7 @@ namespace Backoffice.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Category>> GetById([FromServices] DataContext context, int id)
         {
             var category = await context.Categories.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
@@ -31,6 +32,7 @@ namespace Backoffice.Controllers
 
         [HttpPost]
         [Route("")]
+        [Authorize("employee")]
         public async Task<ActionResult<Category>> Post(
             [FromServices] DataContext context,
             [FromBody]Category model)
@@ -83,7 +85,7 @@ namespace Backoffice.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
-        [Authorize("Manager")]
+        [Authorize("employee")]
         public async Task<ActionResult<Category>> Delete(
             [FromServices] DataContext context,
             int id)
