@@ -32,7 +32,8 @@ namespace Backoffice.Controllers
 
         [HttpPost]
         [Route("")]
-        [Authorize(Roles = "employee")]
+        // [Authorize(Roles = "employee")]
+        [AllowAnonymous]
         public async Task<ActionResult<Category>> Post(
             [FromServices] DataContext context,
             [FromBody]Category model)
