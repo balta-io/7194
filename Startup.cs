@@ -54,7 +54,7 @@ namespace Backoffice
             });
 
             services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("Database"));
-            //services.AddDbContext<DataContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("connectionString")));
+            // services.AddDbContext<DataContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("connectionString")));
             services.AddScoped<DataContext, DataContext>();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
